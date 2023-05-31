@@ -1,0 +1,59 @@
+# OS generated files #
+######################
+.DS_Store
+Thumbs.db
+
+# Dependency directories #
+##########################
+/node_modules/
+/bower_components/
+
+# Build artifacts #
+##################
+/build/
+/dist/
+/out/
+/.next/
+
+# IDE files #
+#############
+.idea/
+.vscode/
+*.iml
+
+# Logs and databases #
+######################
+*.log
+*.sqlite
+*.db
+
+# Environment files #
+#####################
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+
+# Compiled source #
+##################
+*.class
+*.jar
+*.war
+*.ear
+*.dll
+*.exe
+*.obj
+
+# Package files #
+################
+*.zip
+*.tar.gz
+*.rar
+
+# Miscellaneous #
+#################
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

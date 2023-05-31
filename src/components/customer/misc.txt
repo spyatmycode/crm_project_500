@@ -1,0 +1,385 @@
+import React from "react";
+import { FaUser } from "react-icons/fa";
+
+const Customer = () => {
+  return (
+    <>
+      <div className="flex h-full">
+        <div className="h-full w-1/5 ">
+          <span className="flex justify-center">
+            <FaUser size={100} />
+          </span>
+        </div>
+
+        <div className="w-4/5 h-full flex flex-col">
+          <div className="w-full">
+            <h2 className="lg:text-3xl border-b-2 border-black mr-4">General Info</h2>
+            <form className="flex gap-5 p-10 flex-col">
+              <div className="flex gap-5">
+                <span className="flex flex-col">
+                  <label htmlFor="">Customer ID</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">First Name</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">Last Name</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">Email</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+              </div>
+
+              <div>
+                <select
+                  name=""
+                  id=""
+                  className="p-3 rounded-md border-2 cursor-pointer shadow-md border-blue-500"
+                >
+                  <option value="vip">VIP</option>
+                  <option value="new customer">New Customer</option>
+                  <option value="returning">Returning Customer</option>
+                </select>
+              </div>
+              <div className="">
+                <label htmlFor="">Date of Birth (DD-MM-YYYY)</label>
+                <div className="flex gap-3">
+                  <input type="text" className="max-w-[50px]" />/
+                  <input type="text" className="max-w-[50px]" />/
+                  <input type="text" className="max-w-[60px]" />
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <h2 className="lg:text-3xl border-b-2 border-black mr-4">
+            Contact Information
+          </h2>
+
+          <form className="flex gap-5 p-10 flex-col">
+              <div className="flex gap-5">
+                <span className="flex flex-col">
+                  <label htmlFor="">Phone Number</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">Email Address</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">Last Name</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+
+                <span className="flex flex-col">
+                  <label htmlFor="">Email</label>
+                  <input
+                    type="text"
+                    className="w-full border-2 rounded-md justify-center items-center max-w-xl p-1 border-blue-500"
+                  />
+                </span>
+              </div>
+
+              <div>
+                <select
+                  name=""
+                  id=""
+                  className="p-3 rounded-md border-2 cursor-pointer shadow-md border-blue-500"
+                >
+                  <option value="vip">VIP</option>
+                  <option value="new customer">New Customer</option>
+                  <option value="returning">Returning Customer</option>
+                </select>
+              </div>
+              <div className="">
+                <label htmlFor="">Date of Birth (DD-MM-YYYY)</label>
+                <div className="flex gap-3">
+                  <input type="text" className="max-w-[50px]" />/
+                  <input type="text" className="max-w-[50px]" />/
+                  <input type="text" className="max-w-[60px]" />
+                </div>
+              </div>
+            </form>
+        </div>
+
+        
+      </div>
+    </>
+  );
+};
+
+export default Customer;
+
+
+TWillo js 
+
+import React, { useState } from 'react';
+import {Twilio} from 'twilio';
+
+const TwilioForm = () => {
+  const [messageBody, setMessageBody] = useState('');
+  const [fromNumber, setFromNumber] = useState('');
+  const [toNumber, setToNumber] = useState('');
+  const [response, setResponse] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const accountSid = 'YOUR_ACCOUNT_SID';
+      const authToken = 'YOUR_AUTH_TOKEN';
+      const client = Twilio("AC15608a066fab62084b51c676feb74bb0", "4adebb90796d41b775cd5e6bb55c6673");
+
+      const message = await client.messages.create({
+        body: messageBody,
+        from: `whatsapp:${fromNumber}`,
+        to: `whatsapp:${toNumber}`,
+      });
+
+      setResponse(`Message sent with SID: ${message.sid}`);
+    } catch (error) {
+      console.error(error);
+      setResponse('Error sending message.');
+    }
+  };
+
+  return (
+    <div className="max-w-sm mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Send WhatsApp Message</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1">Message:</label>
+          <textarea
+            className="w-full px-2 py-1 border border-gray-300 rounded"
+            value={messageBody}
+            onChange={(e) => setMessageBody(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block mb-1">From Number:</label>
+          <input
+            type="text"
+            className="w-full px-2 py-1 border border-gray-300 rounded"
+            value={fromNumber}
+            onChange={(e) => setFromNumber(e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="block mb-1">To Number:</label>
+          <input
+            type="text"
+            className="w-full px-2 py-1 border border-gray-300 rounded"
+            value={toNumber}
+            onChange={(e) => setToNumber(e.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Send Message
+        </button>
+      </form>
+      {response && <p className="mt-4">{response}</p>}
+    </div>
+  );
+};
+
+export default TwilioForm;
+
+
+
+
+
+import React, { useContext, useState } from "react";
+import { CustomersDb } from "../../providers/CustomerProvider";
+import { FaPlusCircle } from "react-icons/fa";
+
+const EditModal = ({ setModalOpen, phonenumber, email, firstname }) => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  return (
+    <>
+      <div
+        className="w-full h-full fixed top-0 bg-opacity-25 flex justify-center items-center bg-[#f4f4f493] bottom-0 right-0 left-0 z-1"
+        onClick={() => setModalOpen(false)}
+      ></div>
+        <div className="flex p-5 bg-white shadow-lg rounded-md flex-col modal absolute">
+          <h2 className="text-center text-2xl font-bold">SEND A MESSAGE</h2>
+
+          <form className="my-7 w-full" onSubmit={(e) => handleSubmit(e)}>
+            <div className="flex flex-col px-7 w-full">
+              {/* <h2 className="text-xl font-semibold">General Information</h2> */}
+              <div className="flex gap-4 w-full">
+                <div className="w-full">
+                  <h2 className="font-bold">Staff ID</h2>
+                  <input
+                    type="text"
+                    className="w-full outline-none border-2 p-2 border-blue-400"
+                  />
+                </div>
+              </div>
+              <h2 className="text-xl font-semibold mt-4">
+                Contact Information
+              </h2>
+              <div className="flex gap-4">
+                <span>
+                  <div>
+                    <h2>Phone Number</h2>
+                    <input
+                      type="text"
+                      className="outline-none border-2 p-2 border-blue-400"
+                      defaultValue={phonenumber}
+                    />
+                  </div>
+                </span>
+                <span>
+                  <div>
+                    <h2>Email</h2>
+                    <input
+                      type="text"
+                      className="outline-none border-2 p-2 border-blue-400"
+                      defaultValue={email}
+                    />
+                  </div>
+                </span>
+              </div>
+
+              <h2 className="text-xl font-semibold mt-4">MESSAGE</h2>
+
+              <span>
+                <textarea
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="10"
+                  className="outline-none border-2 p-2 border-blue-400 w-full"
+                  value={`Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you`}
+                ></textarea>
+              </span>
+
+              <div className="flex gap-4 items-end justify-between w-full">
+                <span className="flex gap-3">
+                  <button
+                    className="px-4 py-3 bg-red-600 text-white rounded-md"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button className="px-4 py-3  bg-sky-500 text-white rounded-md">
+                    Send
+                  </button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      
+    </>
+  );
+};
+
+const Messaging = () => {
+  const [messages, setMessages] = useState();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const { database, customer } = useContext(CustomersDb);
+
+  const currentCustomer =
+    database && database.find((each) => each.id === customer);
+
+  const generalInfo =
+    currentCustomer && currentCustomer._document.data.value.mapValue.fields;
+  const {
+    firstname,
+    lastname,
+    phonenumber,
+    lastvisit,
+    email,
+    total_purchase_amount,
+    tag,
+  } = generalInfo || {};
+
+  console.log(database);
+  return (
+    <>
+      {database ? (
+        <div className="w-full  h-full p-10">
+          <div
+            className="w-[300px] h-[300px] flex justify-center items-center text-[#3B73C6] bg-white rounded-lg shadow-lg cursor-pointer"
+            onClick={() => setModalOpen(true)}
+          >
+            <span className="flex justify-center items-center flex-col gap-5">
+              <FaPlusCircle size={40} />
+              <h2>Send a new message</h2>
+            </span>
+          </div>
+        </div>
+      ) : (
+        <div>Loading...</div>
+      )}
+
+      {modalOpen && (
+        <EditModal
+          setModalOpen={setModalOpen}
+          phonenumber={phonenumber.integerValue}
+          email={email.stringValue}
+          firstname={firstname.stringValue}
+        />
+      )}
+    </>
+  );
+};
+
+export default Messaging;
+
+
+
+
+<div
+      key={index}
+      className="w-[300px] h-[300px] flex justify-center items-center text-[#3B73C6] bg-white rounded-lg shadow-lg cursor-pointer flex-col font-bold"
+    >
+      <h2 className="text-red-500">{staffID.stringValue}</h2>
+      <span className="flex justify-center items-center flex-col gap-5">
+        <textarea className="border-blue-400 outline-none border-2 p-2" name="" id="" cols="25" rows="7" defaultValue={message.stringValue}></textarea>
+
+        <div className="text-black flex w-full justify-evenly items-center">
+          <span>{fullDate}</span>
+          <span>...</span>
+        </div>
+      </span>
+    </div>
+
