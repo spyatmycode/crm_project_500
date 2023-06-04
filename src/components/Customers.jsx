@@ -4,10 +4,53 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { data } from "autoprefixer";
 import { Link } from "react-router-dom";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../firebase/firebaseconfig";
+import { toast } from "react-hot-toast";
+
+
+const DeleteModal= ({setModal, setDeleteUser, deleteUser, deleteFunction})=>{
+  return(
+    
+      <div className="fixed backdrop-blur-[1px] top-0 w-full h-full bg-brightness-50 flex justify-center items-center">
+
+        <div className="modal w-[400px] h-[300px] flex justify-center items-center flex-col rounded-md shadow-lg bg-white ">
+
+          <h2 className="text-red-700 mx-5 font-bold">
+            WARNING
+          </h2>
+
+          <h1 className="font-bold text-center">
+            Are you sure want to delete this customer's records?
+          </h1>
+          <div className="flex gap-5 my-5">
+            <button className="bg-red-600 p-3 rounded-md text-white" onClick={()=>deleteFunction(deleteUser)}>
+              Delete
+            </button>
+            <button className="bg-blue-600 p-3 rounded-md text-white" onClick={()=>{setModal(false); setDeleteUser("")}}>
+              Cancel
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    
+  )
+}
 
 const Customers = () => {
   const { database , setCustomer} = useContext(CustomersDb);
   const [query, setQuery] = useState("");
+
+  const [modal, setModal] = useState(false)
+  const [deleteUser, setDeleteUser] = useState()
+
+  const deleteUserFromDb = async(id)=>{
+      const deleteRef = doc(db,"customers",id )
+
+      deleteDoc(deleteRef).then(()=>{toast.success("Success: User has been deleted."); setModal(false)}).catch((err)=>toast.error(err.message))
+  }
 
   const handleQuery = (e) => {
     const { name, value } = e.target;
@@ -42,7 +85,7 @@ const Customers = () => {
     return database;
   };
 
-  console.log(filteredList());
+
 
   ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -76,7 +119,6 @@ const Customers = () => {
     returning: returning,
   };
 
-  console.log(customerTagData.newCustomer(), "how far");
 
   const tagChart = database && {
     labels: [
@@ -113,6 +155,8 @@ const Customers = () => {
       },
     ],
   };
+
+  console.log("This is the delete user",deleteUser);
 
   return (
     <div className="relative  sm:rounded-lg mx-10 my-10">
@@ -172,47 +216,7 @@ const Customers = () => {
           </tr>
         </thead>
         <tbody>
-          {/* <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td className="w-4 p-4">
-              <div className="flex items-center">
-                <input
-                  id="checkbox-table-search-2"
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label for="checkbox-table-search-2" className="sr-only">
-                  checkbox
-                </label>
-              </div>
-            </td>
-            <th
-              scope="row"
-              className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-            >
-              Customer1
-            </th>
-            <td className="px-6 py-4">Oluwanifemi</td>
-            <td className="px-6 py-4">Akeju</td>
-            <td className="px-6 py-4">akejunifemi11@gmail.com</td>
-            <td className="px-6 py-4">+2347051807727</td>
-            <td className="px-6 py-4">2023-05-25</td>
-            <td className="px-6 py-4">$20000</td>
-            <td className="px-6 py-4">New Customer</td>
-            <td className="flex items-center px-6 py-4 space-x-3">
-              <a
-                href="#"
-                className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              >
-                Edit
-              </a>
-              <a
-                href="#"
-                className="font-medium text-red-600 dark:text-red-500 hover:underline"
-              >
-                Remove
-              </a>
-            </td>
-          </tr> */}
+          
 
           {database &&
             filteredList().map((customer) => {
@@ -228,8 +232,7 @@ const Customers = () => {
 
               const totalAmount = purchaseHistory.arrayValue.values
 
-              console.log(totalAmount);
-
+     
               const total = totalAmount.map((each)=>{
                 const {quantity, price} = each.mapValue.fields
 
@@ -238,9 +241,8 @@ const Customers = () => {
 
               const finalTotal = total.reduce((acc, current)=> acc + current,0)
 
-              console.log(finalTotal);
+         
 
-              console.log(firstname.stringValue, "THISSS");
               return (
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                   <td className="w-4 p-4">
@@ -280,12 +282,13 @@ const Customers = () => {
                       View
                     </span>
                     </Link>
-                   {/*  <a
-                      href="#"
+                    <button
+                      
                       className="font-medium text-red-600 dark:text-red-500 hover:underline"
+                      onClick={()=>{setModal(true); setDeleteUser(customer.id)}}
                     >
                       Remove
-                    </a> */}
+                    </button>
                   </td>
                 </tr>
               );
@@ -293,6 +296,10 @@ const Customers = () => {
         </tbody>
       </table>
       </div>
+
+      {
+        modal && <DeleteModal setModal={setModal} setDeleteUser={setDeleteUser} deleteFunction={deleteUserFromDb} deleteUser={deleteUser}/>
+      }
 
       
 

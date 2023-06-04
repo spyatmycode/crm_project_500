@@ -1,4 +1,4 @@
-import React, { useState,useContext  } from "react";
+import React, { useState, useContext } from "react";
 import svg from "../assets/auth.png";
 import loader from "../assets/220 (2).gif";
 import {
@@ -9,22 +9,22 @@ import {
   FaUserEdit,
   FaUser,
 } from "react-icons/fa";
-import { Slide } from "react-awesome-reveal";
+import { Fade } from "react-awesome-reveal";
 import { auth } from "../firebase/firebaseconfig";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import {setDoc, doc} from 'firebase/firestore'
+import { setDoc, doc } from "firebase/firestore";
 import { staffContext } from "../providers/StaffProvider";
 import { db } from "../firebase/firebaseconfig";
 
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router";
 
 const Signin = ({ setCurrent }) => {
-  const { staff, setStaff,staffDetails } = useContext(staffContext);
+  const { staff, setStaff, staffDetails } = useContext(staffContext);
   const navigate = useNavigate();
 
   // console.log("this is the user before sign in",user);
@@ -44,14 +44,11 @@ const Signin = ({ setCurrent }) => {
       .then((userCredential) => {
         console.log(userCredential.user);
 
-        setStaff(userCredential.user)
+        setStaff(userCredential.user);
 
-
-        toast.success(
-          `Login successful ! Welcome ${staffDetails.firstname}`
-        );
+        toast.success(`Login successful ! Welcome ${staffDetails.firstname}`);
         console.log(userCredential.user);
-        navigate("/")
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -59,21 +56,21 @@ const Signin = ({ setCurrent }) => {
         toast.error(`Oops! ${err.code}`);
         setLoading(false);
       });
-
-     
   };
 
   return (
     <>
-      <div className="bg-[#FFFFFF] flex  h-screen justify-center items-center gap-60">
-        <div className="hidden lg:block">
-          <Slide>
-            <img src={svg} alt="svg" width={"500px"} />
-          </Slide>
+      <div className="bg-[#FFFFFF] flex  h-screen justify-center items-center ">
+        <div className="hidden lg:flex w-2/3 justify-center items-center ">
+          <span className="w-full flex items-center justify-center ">
+            <Fade>
+              <img src={svg} alt="svg" width={"600px"} />
+            </Fade>
+          </span>
         </div>
-        <div className="flex flex-col h-full justify-center gap-10 lg:gap-28 lg:w-[450px]">
-          <Slide direction="right">
-            <h2 className="text-4xl text-center md:text-4xl font-normal text-gray-700 ">
+        <div className="flex flex-col h-full justify-center items-center lg:bg-[#3E51AC] gap-10 lg:gap-28 lg:w-2/3">
+          <Fade >
+            <h2 className="text-4xl text-center md:text-4xl font-normal text-gray-700 lg:text-white ">
               Welcome to <span className="text-blue-600">DCRM</span>
             </h2>
             <form
@@ -81,12 +78,12 @@ const Signin = ({ setCurrent }) => {
               onSubmit={(e) => handleSubmit(e)}
             >
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   Email
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
-                  <FaUserCircle size={20} color="gray" />
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
+                  <FaUserCircle size={20} color="black" />
                   <input
                     type="email"
                     className="w-full p-3 outline-none"
@@ -96,12 +93,12 @@ const Signin = ({ setCurrent }) => {
                 </span>
               </span>
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold text-gray-500 lg:text-white">
                   Password
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
-                  <FaLock size={20} color="gray" />
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
+                  <FaLock size={20} color="black" />
                   <input
                     type="password"
                     className="w-full p-3 outline-none"
@@ -113,7 +110,7 @@ const Signin = ({ setCurrent }) => {
 
               <button
                 type="submit"
-                className="bg-blue-950 lg:rounded-xl rounded-full p-4 text-white
+                className="bg-[#DC9F40] lg:rounded-full rounded-full p-4 text-white
                         hover:bg-gray-300 duration-700
                         hover:transition-all ease-out hover:duration-700 hover:text-blue-950
                         flex justify-center
@@ -123,18 +120,18 @@ const Signin = ({ setCurrent }) => {
                 {/* Register */}{" "}
                 {loading ? <img src={loader} width={"60px"} /> : "Sign In"}
               </button>
-              <span>
+              <span className="lg:text-white">
                 Don't have an account?{" "}
                 <span
                   onClick={() => setCurrent(1)}
-                  className="text-blue-600 cursor-pointer 
+                  className="text-blue-600 lg:text-red-500 cursor-pointer 
                         "
                 >
                   Register here.
                 </span>
               </span>
             </form>
-          </Slide>
+          </Fade>
         </div>
       </div>
     </>
@@ -161,16 +158,11 @@ const Register = ({ setCurrent }) => {
 
         const staff = userCredential.user;
 
-        const staffRef = doc(db, "staff", staff.uid)
+        const staffRef = doc(db, "staff", staff.uid);
 
-        setDoc(staffRef,{
-            ...formInput
-        })
-
-        
-
-
-
+        setDoc(staffRef, {
+          ...formInput,
+        });
 
         setLoading(false);
 
@@ -193,27 +185,29 @@ const Register = ({ setCurrent }) => {
   };
   return (
     <>
-      <div className="bg-[#FFFFFF] flex  h-screen justify-center items-center gap-60">
-        <div className="hidden lg:block">
-          <Slide>
-            <img src={svg} alt="svg" width={"500px"} />
-          </Slide>
+      <div className="bg-[#FFFFFF] flex h-screen justify-center items-center">
+        <div className="hidden lg:flex w-2/3 justify-center items-center ">
+          <span className="w-full flex items-center justify-center ">
+            <Fade>
+              <img src={svg} alt="svg" width={"600px"} />
+            </Fade>
+          </span>
         </div>
-        <div className="flex flex-col h-full justify-center  lg:gap-28 lg:w-[400px]">
-          <Slide direction="right">
-            <h2 className="text-4xl text-center md:text-4xl font-normal text-gray-700 ">
+        <div className="flex flex-col h-full justify-center items-center lg:bg-[#3E51AC] gap-10 lg:gap-28 lg:w-2/3">
+          <Fade direction="top">
+            <h2 className="text-4xl text-center md:text-4xl font-normal text-gray-700 lg:text-white ">
               Welcome to <span className="text-blue-600">DCRM</span>
             </h2>
             <form
-              className="flex flex-col gap-10 w-full"
+              className="flex flex-col  w-full"
               onSubmit={(e) => handleSubmit(e)}
             >
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   First Name
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaUserEdit size={20} color="gray" required />
                   <input
                     type="text"
@@ -225,11 +219,11 @@ const Register = ({ setCurrent }) => {
                 </span>
               </span>
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   Last Name
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaUserEdit size={20} color="gray" required />
                   <input
                     type="text"
@@ -241,11 +235,11 @@ const Register = ({ setCurrent }) => {
                 </span>
               </span>
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   StaffID
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaUser size={20} color="gray" required />
                   <input
                     type="text"
@@ -258,11 +252,11 @@ const Register = ({ setCurrent }) => {
               </span>
 
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   Email
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaEnvelope size={20} color="gray" required />
                   <input
                     type="email"
@@ -275,11 +269,11 @@ const Register = ({ setCurrent }) => {
               </span>
 
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   Phone Number
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaPhoneAlt size={20} color="gray" required />
                   <input
                     type="tel"
@@ -293,11 +287,11 @@ const Register = ({ setCurrent }) => {
               </span>
 
               <span className=" ">
-                <label className="text-lg font-semibold text-gray-500">
+                <label className="text-lg font-semibold lg:text-white text-gray-500">
                   Password
                 </label>
 
-                <span className="flex items-center   !border-b-2 border-blue-600">
+                <span className="flex items-center bg-white  !border-2 border-blue-600 rounded-full lg:border-white px-5">
                   <FaLock size={20} color="gray" />
                   <input
                     type="password"
@@ -311,28 +305,28 @@ const Register = ({ setCurrent }) => {
 
               <button
                 type="submit"
-                className="bg-blue-950 lg:rounded-xl rounded-full p-4 text-white
-                        hover:bg-gray-300 duration-700
-                        hover:transition-all ease-out hover:duration-700 hover:text-blue-950
-                        flex justify-center
+                className="bg-[#DC9F40] lg:rounded-full rounded-full p-4 text-white
+                hover:bg-gray-300 duration-700
+                hover:transition-all ease-out hover:duration-700 hover:text-blue-950
+                flex justify-center my-6
                         "
                 onClick={(e) => handleSubmit(e)}
               >
                 {/* Register */}{" "}
                 {loading ? <img src={loader} width={"60px"} /> : "Register"}
               </button>
-              <span>
+              <span className="lg:text-white">
                 Do you already have an account ?{" "}
                 <span
                   onClick={() => setCurrent(0)}
-                  className="text-blue-600 cursor-pointer 
+                  className="text-blue-600 lg:text-red-500 cursor-pointer
                         "
                 >
                   Sign in
                 </span>
               </span>
             </form>
-          </Slide>
+          </Fade>
         </div>
       </div>
     </>
