@@ -8,6 +8,8 @@ const CustomersProvider = ({ children }) => {
   const [database, setDatabase] = useState()
 
   const [customer, setCustomer] = useState()
+
+  const [suggestion, setSuggestion] = useState(null)
 //   const { user } = useContext(AuthContext);
 let user ="nifemi"
 
@@ -35,7 +37,7 @@ let user ="nifemi"
   }, [user,db]);
 
   return (
-    <CustomersDb.Provider value={{database, setCustomer, customer}}>
+    <CustomersDb.Provider value={{database, setCustomer, customer, setSuggestion}}>
       {children}
     </CustomersDb.Provider>
   );

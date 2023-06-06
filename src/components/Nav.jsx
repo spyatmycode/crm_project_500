@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, NavLink, useNavigate } from 'react-router-dom';
-import {FaChevronCircleLeft,FaChevronCircleRight, FaHome, FaSignOutAlt, FaUsers} from 'react-icons/fa'
+import {FaBars, FaCartArrowDown, FaChevronCircleLeft,FaChevronCircleRight, FaHome, FaSignOutAlt, FaUsers} from 'react-icons/fa'
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase/firebaseconfig';
 import { toast } from 'react-hot-toast';
@@ -48,7 +48,7 @@ const NavBar = () => {
              
             </div>
             <button
-              className='absolute right-3 top-14  translate-x-full rounded-full bg-blue-500 text-white flex items-center justify-center w-6 h-6 transition-all duration-300 cursor-pointer'
+              className=' lg:hidden absolute right-3 top-14  translate-x-full rounded-full bg-blue-500 text-white flex items-center justify-center w-6 h-6 transition-all duration-300 cursor-pointer'
               onClick={toggleFunc}
             >
               {navExpand ? <FaChevronCircleLeft /> : <FaChevronCircleRight />}
@@ -60,15 +60,34 @@ const NavBar = () => {
             <div className='mt-10'>
               <ul className='flex flex-col w-full list-none justify-center dark:text-white'>
               
-                <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48'>
+                {<li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={toggleFunc}>
+                 
+                    <FaBars size='20px' />
+                    {navExpand ? (
+                      <span className='ml-2 font-semibold opacity-1  transition-all duration-700'></span>
+                    ) : <span className='ml-2 font-semibold opacity-0'></span>}
+                 
+                </li>}
+                {<li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48'>
                   <NavLink
-                    to='/'
+                    to='/customers'
                     className=' flex items-center h-full no-underline rounded-md transition-all duration-200 w-full'
                   >
                     <FaUsers size='20px' />
                     {navExpand ? (
                       <span className='ml-2 font-semibold opacity-1  transition-all duration-700'>Customers</span>
                     ) : <span className='ml-2 font-semibold opacity-0'>Home</span>}
+                  </NavLink>
+                </li>}
+                <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' >
+                  <NavLink
+                    to='/products'
+                    className=' flex items-center h-full no-underline rounded-md transition-all duration-200 w-full'
+                  >
+                    <FaCartArrowDown size='20px' />
+                    {navExpand ? (
+                      <span className='ml-2 font-semibold opacity-1  transition-all duration-700'>Products</span>
+                    ) : <span className='ml-2 font-semibold opacity-0'>Sign Out</span>}
                   </NavLink>
                 </li>
                 <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={handleSignOut}>
@@ -78,8 +97,8 @@ const NavBar = () => {
                   >
                     <FaSignOutAlt size='20px' />
                     {navExpand ? (
-                      <span className='ml-2 font-semibold opacity-1  transition-all duration-700'>Customers</span>
-                    ) : <span className='ml-2 font-semibold opacity-0'>Home</span>}
+                      <span className='ml-2 font-semibold opacity-1  transition-all duration-700'>Sign Out</span>
+                    ) : <span className='ml-2 font-semibold opacity-0'>Sign Out</span>}
                   </NavLink>
                 </li>
                 </ul>

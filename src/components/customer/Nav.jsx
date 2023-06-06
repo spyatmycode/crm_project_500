@@ -20,10 +20,10 @@ const NavBar = () => {
   };
 
   const sidebar =
-    'dark:bg-[#23304d] bg-[#433e82]  h-full fixed left-0 pb-10 pl-7  top-0 transition-all duration-500 w-1/6 z-10 ';
+    'dark:bg-[#23304d] lg:bg-gray-600  h-full fixed left-0 pb-10 pl-7  top-0 transition-all duration-500 w-1/6 z-10 ';
 
   const sidebarClose =
-    'dark:bg-[#23304d] bg-[#433e82] bg-[#E4E9F7] h-full pb-10 fixed left-0    top-0 transition-all duration-500 w-28  z-10';
+    'dark:bg-[#23304d] lg:bg-black bg-[#E4E9F7] h-full pb-10 fixed left-0    top-0 transition-all duration-500 w-28  z-10';
 
   const handleSignOut = async () => {
     try {
@@ -92,7 +92,7 @@ const NavBar = () => {
                  
                 </li>
                </NavLink>
-               <NavLink to={`/`}>
+               <NavLink to={`/customers`}>
                  <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={()=>setChannel(1)}>
                 
                     <FaArrowLeft size='20px' color='white' />

@@ -48,7 +48,7 @@ const Signin = ({ setCurrent }) => {
 
         toast.success(`Login successful ! Welcome ${staffDetails.firstname}`);
         console.log(userCredential.user);
-        navigate("/");
+        navigate("/customers");
       })
       .catch((err) => {
         console.log(err);
@@ -166,7 +166,7 @@ const Register = ({ setCurrent }) => {
 
         setLoading(false);
 
-        navigate("/");
+        navigate("/customers");
 
         toast.success("Registration success");
 

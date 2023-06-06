@@ -5,24 +5,117 @@ import { db } from "../../firebase/firebaseconfig";
 import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { staffContext } from "../../providers/StaffProvider";
 import { toast } from "react-hot-toast";
+import { products } from "../Products";
 
 const EditModal = ({
   setModalOpen,
   phonenumber,
   email,
   firstname,
-  customer,
   messages,
   staffID
 }) => {
   const newDate = new Date().getTime();
+  
+
+  const { customer, database, setSuggestion } = useContext(CustomersDb);
+
+  const currentCustomer =
+    database && database.find((customerr) => customerr.id === customer);
+
+  const generalInfo =
+    currentCustomer && currentCustomer._document.data.value.mapValue.fields;
+  const {
+    purchaseHistory,
+  } = generalInfo || {};
+
+  const history = database && purchaseHistory.arrayValue.values;
+
+  const categories =
+    purchaseHistory &&
+    purchaseHistory.arrayValue?.values.map((each) => {
+      const { category } = each.mapValue.fields;
+
+      return category.stringValue;
+    });
+
+  const catMap = new Map();
+
+  for (let i = 0; i < categories.length; i++) {
+    if (!catMap.has(categories[i])) {
+      catMap.set(categories[i], 1);
+    } else {
+      catMap.set(categories[i], catMap.get(categories[i]) + 1);
+    }
+  }
+
+  console.log(catMap);
+
+  let maxCount = 0;
+  let mostFrequentCategory = null
+  catMap.forEach((values, keys) => {
+    if (values > maxCount) {
+      maxCount = values;
+      mostFrequentCategory = keys
+    }
+  });
+
+  console.log(products, history);
+
+  const currentPurchaseHistory  = history && history.map((each)=>{
+    const {category, productID, productName, price, quantity, description}= each.mapValue.fields
+
+    return {
+      id: productID.stringValue,
+      name: productName.stringValue,
+      category: category.stringValue,
+      quantity: quantity.integerValue,
+      price: price.integerValue,
+      
+    }
+  })
+
+  console.log(currentPurchaseHistory,"dada");
+
+  const mostFreqProducts = products.filter((each)=> each.category === mostFrequentCategory).sort((a,b)=> a.price - b.price).slice(0,5)
+
+  console.log(mostFreqProducts);
+
+  const difference = mostFreqProducts.filter((obj1) => {
+    // Check if there is no object in array2 with the same id
+    return !currentPurchaseHistory.some((obj2) => obj2.name === obj1.name);
+  });
+
+
+  let simpleMessage = `
+  Subject: New Product Recommendation
+
+Dear ${firstname},
+We hope this message finds you well. We wanted to inform you about a new product that we believe might be of interest to you based on your purchase history and preferences.
+
+Product Details:
+Name: ${difference[0].name}
+Category: ${difference[0].category}
+Description: ${difference[0].description}
+Price:$ ${difference[0].price}
+
+Feel free to visit our website or contact our customer support if you have any questions or would like to place an order. We value your continued support and look forward to serving you with the best products and services.
+
+Best regards,
+Darren's Store.
+
+  
+  `
+
   const [message, setMessage] = useState({
     number: phonenumber,
     staffID: staffID,
     email: email,
-    message: `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you`,
+    message: simpleMessage /* || `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you` */,
     date: newDate,
   });
+
+  console.log(difference);
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -46,7 +139,7 @@ const EditModal = ({
     }
 
     try {
-      const response = await fetch('http://localhost:3000/submit', {
+      const response = await fetch('https://crm-server-500.onrender.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -140,7 +233,7 @@ const EditModal = ({
                 cols="30"
                 rows="10"
                 className="outline-none border-2 p-2 border-blue-400 w-full"
-                defaultValue={`DARREN'S STORE \n Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you`}
+                defaultValue={`${simpleMessage}`}
               ></textarea>
             </span>
 

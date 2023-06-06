@@ -1,5 +1,7 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { CustomersDb } from "../../providers/CustomerProvider";
+import { products } from "../Products";
+import Table from "../../table/Table";
 // import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 // ChartJS.register(ArcElement, Tooltip, Legend);
@@ -16,6 +18,7 @@ import {
   Legend,
 } from "chart.js";
 import { Bar, Pie, Line } from "react-chartjs-2";
+import { useEffect } from "react";
 
 ChartJS.register(
   PointElement,
@@ -29,26 +32,19 @@ ChartJS.register(
   ArcElement
 );
 
-
-
 const History = () => {
-
-   const lineOptions = {
+  const lineOptions = {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
       },
       title: {
         display: true,
-        text: 'Chart.js Line Chart',
+        text: "Chart.js Line Chart",
       },
     },
   };
-
-
-
-
 
   const options = {
     plugins: {
@@ -62,7 +58,7 @@ const History = () => {
       mode: "index",
       intersect: false,
     },
-  
+
     aspectRatio: 1,
     scales: {
       x: {
@@ -73,9 +69,8 @@ const History = () => {
       },
     },
   };
-  
-  
-  const { customer, database } = useContext(CustomersDb);
+
+  const { customer, database, setSuggestion } = useContext(CustomersDb);
 
   const [query, setQuery] = useState("");
 
@@ -118,10 +113,7 @@ const History = () => {
           quantity.integerValue
             .toString()
             .toLowerCase()
-            .includes(query.toLowerCase()) ||
-          total_purchase_amount.stringValue
-            .toLowerCase()
-            .includes(query.toLowerCase()) ||
+            .includes(query.toLowerCase())  ||
           productName.stringValue.toLowerCase().includes(query.toLowerCase())
         );
       });
@@ -139,11 +131,13 @@ const History = () => {
       return Number(price.integerValue) * Number(quantity.integerValue);
     });
 
-    const pricesTotal = prices && prices.reduce((acc, current)=>{
-      return acc + current
-    },0)
+  const pricesTotal =
+    prices &&
+    prices.reduce((acc, current) => {
+      return acc + current;
+    }, 0);
 
-    console.log(pricesTotal);
+  console.log(pricesTotal);
   const productNames =
     history &&
     history.map((item) => {
@@ -161,29 +155,30 @@ const History = () => {
       return Number(quantity.integerValue);
     });
 
-    const dates = history && history.map((each)=>{
+  const dates =
+    history &&
+    history.map((each) => {
       const { price, quantity, productID, date, productName } =
-      each.mapValue.fields;
+        each.mapValue.fields;
 
-      return new Date(date.stringValue).getTime()
-    })
+      return new Date(date.stringValue).getTime();
+    });
 
-    const lastVisited = dates &&  Math.max(...dates)
+  const lastVisited = dates && Math.max(...dates);
 
-    const lastVisitedDate = ()=>{
-      const time = new Date(lastVisited)
+  const lastVisitedDate = () => {
+    const time = new Date(lastVisited);
 
-      let year = time.getFullYear() 
-      let day = time.getDate() < 10 ? `0${time.getDate()}`:  time.getDate()
-      let month = time.getMonth() + 1 < 10 ? `0${time.getMonth() + 1}`:  time.getMonth()
+    let year = time.getFullYear();
+    let day = time.getDate() < 10 ? `0${time.getDate()}` : time.getDate();
+    let month =
+      time.getMonth() + 1 < 10 ? `0${time.getMonth() + 1}` : time.getMonth();
 
-      let date = `${year}-${month}-${day}`
-      return date
-    }
+    let date = `${year}-${month}-${day}`;
+    return date;
+  };
 
-    console.log("MUMU",lastVisitedDate());
-
-  
+  console.log("MUMU", lastVisitedDate());
 
   const barChartData = productNames && {
     labels: productNames,
@@ -206,7 +201,7 @@ const History = () => {
     datasets: [
       {
         data: productQuantities,
-         backgroundColor : [
+        backgroundColor: [
           "rgba(255, 99, 132, 0.5)",
           "rgba(75, 192, 192, 0.5)",
           "rgba(53, 162, 235, 0.5)",
@@ -238,32 +233,36 @@ const History = () => {
           "rgba(153, 102, 255, 0.5)",
           "rgba(255, 159, 64, 0.5)",
           // Add more colors as needed...
-        ]
-        
+        ],
       },
     ],
   };
 
-  const mappingDates = history && history.map((each)=>{
-    const { price, quantity, productID, date, productName } =
-    each.mapValue.fields;
+  const mappingDates =
+    history &&
+    history.map((each) => {
+      const { price, quantity, productID, date, productName } =
+        each.mapValue.fields;
 
-    const timeStamp = new Date(date.stringValue)
+      const timeStamp = new Date(date.stringValue);
 
-    let year = timeStamp.getFullYear() 
-    let day = timeStamp.getDate() < 10 ? `0${timeStamp.getDate()}`:  timeStamp.getDate()
-    let month = timeStamp.getMonth() + 1 < 10 ? `0${timeStamp.getMonth() + 1}`:  timeStamp.getMonth()
+      let year = timeStamp.getFullYear();
+      let day =
+        timeStamp.getDate() < 10
+          ? `0${timeStamp.getDate()}`
+          : timeStamp.getDate();
+      let month =
+        timeStamp.getMonth() + 1 < 10
+          ? `0${timeStamp.getMonth() + 1}`
+          : timeStamp.getMonth();
 
-    let finalDate = `${year}-${month}-${day}`
-    return finalDate
+      let finalDate = `${year}-${month}-${day}`;
+      return finalDate;
+    });
 
-    
-    
-  })
+  
 
-  console.log("pricesTotal", pricesTotal);
-
-  const labels = mappingDates
+  const labels = mappingDates;
   const data = pricesTotal && {
     labels,
     datasets: [
@@ -271,9 +270,8 @@ const History = () => {
         label: "Dataset 2",
         data: prices,
         backgroundColor: "rgb(75, 192, 192)",
-        borderColor:"blue"
-        
-      }
+        borderColor: "blue",
+      },
       /* ,
       {
         label: "Dataset 3",
@@ -284,106 +282,183 @@ const History = () => {
     ],
   };
 
-  console.log(prices, productQuantities, productNames, dates);
-  return (
-   
-    history ? <>
+  let similarities = [];
 
-<div className="relative  sm:rounded-lg mx-10 my-10">
-      <h2 className="text-center text-xl font-bold">
-        Product History for '#{customer}' - {firstname.stringValue} {lastname.stringValue}
-      </h2>
-      <div className="flex w-full justify-center my-6">
-        <input
-          onChange={handleQuery}
-          name="query"
-          type="text"
-          className="w-full border-2 rounded-md justify-center items-center max-w-xl p-2 border-blue-500 shadow-lg"
-          placeholder="Search Products by Fields"
-        />
-      </div>
-      <div className="overflow-x-auto rounded-md  border-2 border-gray-100">
-        <table className="w-full text-sm border-2 border-gray-200 text-left rounded-md  text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              <th scope="col" className="p-4">
-                <div className="flex items-center">
-                  <input
-                    id="checkbox-all-search"
-                    type="checkbox"
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                  <label for="checkbox-all-search" className="sr-only">
-                    checkbox
-                  </label>
-                </div>
-              </th>
+  const categories =
+    purchaseHistory &&
+    purchaseHistory.arrayValue?.values.map((each) => {
+      const { category } = each.mapValue.fields;
 
-              <th scope="col" className="px-6 py-3">
-                Product_ID
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Product_Name
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Price
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Quantity
-              </th>
-              <th scope="col" className="px-6 py-3">
-                Total
-              </th>
+      return category.stringValue;
+    });
 
-              <th scope="col" className="px-6 py-3">
-                Date
-              </th>
-              {/* <th scope="col" className="px-6 py-3">
+  const catMap = new Map();
+
+  for (let i = 0; i < categories.length; i++) {
+    if (!catMap.has(categories[i])) {
+      catMap.set(categories[i], 1);
+    } else {
+      catMap.set(categories[i], catMap.get(categories[i]) + 1);
+    }
+  }
+
+  console.log(catMap);
+
+  let maxCount = 0;
+  let mostFrequentCategory = null
+  catMap.forEach((values, keys) => {
+    if (values > maxCount) {
+      maxCount = values;
+      mostFrequentCategory = keys
+    }
+  });
+
+  console.log(products, history);
+
+  const currentPurchaseHistory  = history && history.map((each)=>{
+    const {category, productID, productName, price, quantity}= each.mapValue.fields
+
+    return {
+      id: productID.stringValue,
+      name: productName.stringValue,
+      category: category.stringValue,
+      quantity: quantity.integerValue,
+      price: price.integerValue
+    }
+  })
+
+  console.log(currentPurchaseHistory,"dada");
+
+  const mostFreqProducts = products.filter((each)=> each.category === mostFrequentCategory).sort((a,b)=> a.price - b.price).slice(0,5)
+
+  console.log(mostFreqProducts);
+
+  const difference = mostFreqProducts.filter((obj1) => {
+    // Check if there is no object in array2 with the same id
+    return !currentPurchaseHistory.some((obj2) => obj2.name === obj1.name);
+  });
+
+
+ 
+
+  console.log(difference);
+
+  
+
+  
+
+
+  return history ? (
+    <>
+      <div className="relative  sm:rounded-lg mx-10 my-10">
+        <h2 className="text-center text-xl font-bold">
+          Product History for '#{customer}' - {firstname.stringValue}{" "}
+          {lastname.stringValue}
+        </h2>
+        <div className="flex w-full justify-center my-6">
+          <input
+            onChange={handleQuery}
+            name="query"
+            type="text"
+            className="w-full border-2 rounded-md justify-center items-center max-w-xl p-2 border-blue-500 shadow-lg"
+            placeholder="Search Products by Fields"
+          />
+        </div>
+        <div className="overflow-x-auto rounded-md  border-2 border-gray-100">
+          <table className="w-full text-sm border-2 border-gray-200 text-left rounded-md  text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="p-4">
+                  <div className="flex items-center">
+                    <input
+                      id="checkbox-all-search"
+                      type="checkbox"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    />
+                    <label for="checkbox-all-search" className="sr-only">
+                      checkbox
+                    </label>
+                  </div>
+                </th>
+
+                <th scope="col" className="px-6 py-3">
+                  Product_ID
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Product_Name
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Category
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Price
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Quantity
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Total
+                </th>
+
+                <th scope="col" className="px-6 py-3">
+                  Date
+                </th>
+                {/* <th scope="col" className="px-6 py-3">
                    Total Purchases
                 </th> */}
-              {/*  <th scope="col" className="px-6 py-3">
+                {/*  <th scope="col" className="px-6 py-3">
                     Tags
                 </th> */}
-              {/* <th scope="col" className="px-6 py-3">
+                {/* <th scope="col" className="px-6 py-3">
                 Action
               </th> */}
-            </tr>
-          </thead>
-          <tbody>
-            {database &&
-              filteredList().map((item) => {
-                const { price, quantity, productID, date, productName } =
-                  item.mapValue.fields;
-                return (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <td className="w-4 p-4">
-                      <div className="flex items-center">
-                        <input
-                          id="checkbox-table-search-2"
-                          type="checkbox"
-                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                        />
-                        <label for="checkbox-table-search-2" className="sr-only">
-                          checkbox
-                        </label>
-                      </div>
-                    </td>
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {productID.stringValue}
-                    </th>
-                    <td className="px-6 py-4">{productName.stringValue}</td>
+              </tr>
+            </thead>
+            <tbody>
+              {database &&
+                filteredList().map((item) => {
+                  const {
+                    price,
+                    quantity,
+                    productID,
+                    date,
+                    productName,
+                    category,
+                  } = item.mapValue.fields;
+                  return (
+                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                      <td className="w-4 p-4">
+                        <div className="flex items-center">
+                          <input
+                            id="checkbox-table-search-2"
+                            type="checkbox"
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            for="checkbox-table-search-2"
+                            className="sr-only"
+                          >
+                            checkbox
+                          </label>
+                        </div>
+                      </td>
+                      <th
+                        scope="row"
+                        className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {productID.stringValue}
+                      </th>
+                      <td className="px-6 py-4">{productName.stringValue}</td>
+                      <td className="px-6 py-4">{category.stringValue}</td>
 
-                    <td className="px-6 py-4">${price.integerValue}</td>
-                    <td className="px-6 py-4">{quantity.integerValue}</td>
-                    <td className="px-6 py-4">
-                      ${price.integerValue * quantity.integerValue}
-                    </td>
-                    <td className="px-6 py-4">{date.stringValue}</td>
+                      <td className="px-6 py-4">${price.integerValue}</td>
+                      <td className="px-6 py-4">{quantity.integerValue}</td>
+                      <td className="px-6 py-4">
+                        ${price.integerValue * quantity.integerValue}
+                      </td>
+                      <td className="px-6 py-4">{date.stringValue}</td>
 
-                   {/*  <td className="flex items-center px-6 py-4 space-x-3">
+                      {/*  <td className="flex items-center px-6 py-4 space-x-3">
                       <a
                         href="#"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -397,52 +472,58 @@ const History = () => {
                         Remove
                       </a>
                     </td> */}
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="mt-10">
-
-        <span className="text-2xl">Total Amount Spent:</span>  <span className="text-2xl font-bold">{`$${pricesTotal}`}</span>
-
-      </div>
-      <div className="mt-10">
-
-        <span className="text-2xl">Last Visited:</span>  <span className="text-2xl font-bold">{`${lastVisitedDate()}`}</span>
-
-      </div>
-
-      <div className=" w-full lg:grid lg:grid-cols-2 flex flex-col my-5 gap-5  items-center justify-center" id="stats">
-        <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
-          <h2 className="border-b-2 border-black font-bold">
-            Purchase History Comparison
-          </h2>
-          <Bar data={barChartData} options={options} width={600} />
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
         </div>
-        <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
-          <h2 className="border-b-2 border-black font-bold">
-          Quantity Distribution by Product
-          </h2>
-          <Pie data={pieChartData} options={options} width={600} />
+
+       
+
+        <div className="mt-10">
+          <span className="text-2xl">Total Amount Spent:</span>{" "}
+          <span className="text-2xl font-bold">{`$${pricesTotal}`}</span>
         </div>
-        <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
-          <h2 className="border-b-2 border-black font-bold">
-          Purchase History Trends
+        <div className="mt-10">
+          <span className="text-2xl">Last Visited:</span>{" "}
+          <span className="text-2xl font-bold">{`${lastVisitedDate()}`}</span>
+        </div>
+
+        <div>
+          <h2 className="font-bold text-2xl text-center p-4 my-10 underline">
+            Products that may interest this customer
           </h2>
-          <Line data={data} options={options} width={600} />
+          <Table array={difference} />
+        </div>
+
+        <div
+          className=" w-full lg:grid lg:grid-cols-2 flex flex-col my-5 gap-5  items-center justify-center"
+          id="stats"
+        >
+          <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
+            <h2 className="border-b-2 border-black font-bold">
+              Purchase History Comparison
+            </h2>
+            <Bar data={barChartData} options={options} width={600} />
+          </div>
+          <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
+            <h2 className="border-b-2 border-black font-bold">
+              Quantity Distribution by Product
+            </h2>
+            <Pie data={pieChartData} options={options} width={600} />
+          </div>
+          <div className="grid p-3 shadow-xl w-[600px] bg-white rounded-md">
+            <h2 className="border-b-2 border-black font-bold">
+              Purchase History Trends
+            </h2>
+            <Line data={data} options={options} width={600} />
+          </div>
         </div>
       </div>
-    </div>
-    
-    </> :
-     <div>
-      Loading....
-    </div>
-
-   
+    </>
+  ) : (
+    <div>Loading....</div>
   );
 };
 

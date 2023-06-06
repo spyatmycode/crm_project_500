@@ -11,14 +11,14 @@ const Protected = ({children}) => {
     console.log("this is the staff",staff);
 
 
-    if(staff === null){
-        return < Navigate to={'/auth'}/>
+    if(staff !== null){
+        return children
     }
 
     
 
      
-    return children
+    return < Navigate to={'/auth'}/>
     
    
 
