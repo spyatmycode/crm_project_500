@@ -281,7 +281,7 @@ const Customer = () => {
               firstname={firstname.stringValue}
               lastname={lastname.stringValue}
               email={email.stringValue}
-              phonenumber={phonenumber.integerValue}
+              phonenumber={phonenumber.stringValue}
               id={currentUrl}
             />
           )}
