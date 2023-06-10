@@ -332,6 +332,9 @@ console.log(filteredList());
           onChange={handleChange}
         />
       </div>
+      <h2 className="text-center p-3 font-bold text-2xl underline text-blue-700">
+        Inventory
+      </h2>
       <Table array={filteredList()} />
     </div>
   );

@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Link, Outlet, NavLink } from 'react-router-dom';
 import {FaChevronCircleLeft,FaChevronCircleRight, FaDashcube, FaEnvelope, FaHome, FaListAlt, FaUser, FaUsers, FaArrowLeft} from 'react-icons/fa'
-import Render from './Profile';
 import { CustomersDb } from '../../providers/CustomerProvider';
 
 
@@ -12,6 +11,9 @@ import { CustomersDb } from '../../providers/CustomerProvider';
 const NavBar = () => {
 
    const {customer} = useContext(CustomersDb)
+   const currentCustomer = JSON.parse(localStorage.getItem("currentCID"))
+
+   console.log("This is the customerrrrrrrr", customer);
   
   const [navExpand, setNavExpand] = useState(false);
 
@@ -60,7 +62,7 @@ const NavBar = () => {
             <div className='mt-10'>
               <ul className='flex flex-col  list-none justify-center dark:text-white'>
               
-                <NavLink to={`/customer/${customer}`}>
+                <NavLink to={`/customer/${currentCustomer}`}>
                 <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={()=>setChannel(0)}>
                  
                  <FaUser size='20px' color='white' />
@@ -72,7 +74,7 @@ const NavBar = () => {
              </li>
                 </NavLink>
 
-               <NavLink to={`/customer/${customer}/history`}>
+               <NavLink to={`/customer/${currentCustomer}/history`}>
                  <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={()=>setChannel(1)}>
                 
                     <FaListAlt size='20px' color='white' />
@@ -82,7 +84,7 @@ const NavBar = () => {
                  
                 </li>
                </NavLink>
-               <NavLink to={`/customer/${customer}/messaging`}>
+               <NavLink to={`/customer/${currentCustomer}/messaging`}>
                  <li className='flex items-center list-none mt-10 px-10 pt-0 mb-10 h-10 pr-10  rounded-lg w-48' onClick={()=>setChannel(1)}>
                 
                     <FaEnvelope size='20px' color='white' />
@@ -106,7 +108,7 @@ const NavBar = () => {
             </div>
           </div>
         </nav>
-        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200  transition-all duration-500 fixed overflow-hidden right-0': 'bg-[#f4f4f4] w-[calc(100%-7rem)] h-full dark:bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
+        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200 flex justify-center items-center  transition-all duration-500 fixed overflow-hidden right-0': 'bg-[#f4f4f4] w-[calc(100%-7rem)] h-full dark:bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
             <nav className='w-full p-10  font-bold text-3xl'>
 
                 Dashboard
@@ -117,7 +119,7 @@ const NavBar = () => {
         </div>
       </div>
 
-      {<span className='hidden'><Render channel={channel}></Render></span>}
+      
     </>
   );
 };

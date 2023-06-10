@@ -19,6 +19,7 @@ import {
 } from "chart.js";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import { useEffect } from "react";
+import Loading from "../Loading";
 
 ChartJS.register(
   PointElement,
@@ -79,9 +80,16 @@ const History = () => {
     setQuery(value);
   };
 
-  const currentCustomer =
-    database && database.find((customerr) => customerr.id === customer);
+  const customerID = window.location.href.split("/")[4]
 
+  console.log("Identification",customerID);
+
+  console.log("this is the DBBDBDB", database);
+
+  const currentCustomer =
+    database && database.find((customerr) => customerr.id === customerID);
+
+  
   const generalInfo =
     currentCustomer && currentCustomer._document.data.value.mapValue.fields;
   const {
@@ -137,7 +145,6 @@ const History = () => {
       return acc + current;
     }, 0);
 
-  console.log(pricesTotal);
   const productNames =
     history &&
     history.map((item) => {
@@ -178,7 +185,19 @@ const History = () => {
     return date;
   };
 
-  console.log("MUMU", lastVisitedDate());
+  const monthDistance = () =>{
+
+    const month = new Date(lastVisited).getMonth() + 1
+
+    const today = new Date().getMonth() + 1
+
+    return today - month
+
+  }
+
+
+
+
 
   const barChartData = productNames && {
     labels: productNames,
@@ -294,15 +313,17 @@ const History = () => {
 
   const catMap = new Map();
 
-  for (let i = 0; i < categories.length; i++) {
-    if (!catMap.has(categories[i])) {
-      catMap.set(categories[i], 1);
-    } else {
-      catMap.set(categories[i], catMap.get(categories[i]) + 1);
+   if(categories){
+    for (let i = 0; i < categories.length; i++) {
+      if (!catMap.has(categories[i])) {
+        catMap.set(categories[i], 1);
+      } else {
+        catMap.set(categories[i], catMap.get(categories[i]) + 1);
+      }
     }
-  }
+   }
 
-  console.log(catMap);
+
 
   let maxCount = 0;
   let mostFrequentCategory = null
@@ -313,7 +334,7 @@ const History = () => {
     }
   });
 
-  console.log(products, history);
+
 
   const currentPurchaseHistory  = history && history.map((each)=>{
     const {category, productID, productName, price, quantity}= each.mapValue.fields
@@ -327,11 +348,10 @@ const History = () => {
     }
   })
 
-  console.log(currentPurchaseHistory,"dada");
+
 
   const mostFreqProducts = products.filter((each)=> each.category === mostFrequentCategory).sort((a,b)=> a.price - b.price).slice(0,5)
 
-  console.log(mostFreqProducts);
 
   const difference = mostFreqProducts.filter((obj1) => {
     // Check if there is no object in array2 with the same id
@@ -341,7 +361,7 @@ const History = () => {
 
  
 
-  console.log(difference);
+
 
   
 
@@ -351,8 +371,8 @@ const History = () => {
   return history ? (
     <>
       <div className="relative  sm:rounded-lg mx-10 my-10">
-        <h2 className="text-center text-xl font-bold">
-          Product History for '#{customer}' - {firstname.stringValue}{" "}
+        <h2 className="text-center text-2xl font-bold underline text-blue-600">
+          Product History for '#{customerID}' - {firstname.stringValue}{" "}
           {lastname.stringValue}
         </h2>
         <div className="flex w-full justify-center my-6">
@@ -486,8 +506,9 @@ const History = () => {
           <span className="text-2xl font-bold">{`$${pricesTotal}`}</span>
         </div>
         <div className="mt-10">
-          <span className="text-2xl">Last Visited:</span>{" "}
+          <span className="text-2xl">Last Visited:</span>
           <span className="text-2xl font-bold">{`${lastVisitedDate()}`}</span>
+          <span className="text-red-400 ml-5 text-2xl font-bold">({`${monthDistance()}  ${monthDistance > 1 ? "Months Ago":"Month Ago"}`}) </span>
         </div>
 
         <div>
@@ -523,7 +544,7 @@ const History = () => {
       </div>
     </>
   ) : (
-    <div>Loading....</div>
+   <Loading />
   );
 };
 

@@ -18,7 +18,7 @@ let user ="nifemi"
     const fetchData = await getDocs(ref)
 
     if(fetchData){
-        console.log(fetchData);
+        console.log("DOCSSS",fetchData);
         setDatabase(fetchData.docs)
     }
     
@@ -26,11 +26,22 @@ let user ="nifemi"
   };
 
   useEffect(() => {
+    const getData =async () => {
+      const ref =  collection(db,"customers")
+      const fetchData = await getDocs(ref)
+  
+      if(fetchData){
+          console.log("DOCSSS",fetchData);
+          setDatabase(fetchData.docs)
+      }
+      
+     
+    };
     const unsubscribe = getData();
     return () => {
 
       // Clean up the event listener when the component unmounts or when `user` changes
-      /* if (unsubscribe) {
+   /*    if (unsubscribe) {
         unsubscribe();
       } */
     };

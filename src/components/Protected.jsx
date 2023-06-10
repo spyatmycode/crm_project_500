@@ -8,10 +8,14 @@ const Protected = ({children}) => {
 
     const {staff} = useContext(staffContext)
 
+    const localStaff = JSON.parse(localStorage.getItem("staff"))
+
+    console.log(localStaff);
+
     console.log("this is the staff",staff);
 
 
-    if(staff !== null){
+    if(staff !== null  || localStaff){
         return children
     }
 

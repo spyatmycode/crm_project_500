@@ -12,6 +12,7 @@ import { toast } from 'react-hot-toast';
 
 
 const NavBar = () => {
+  
 
   const navigate = useNavigate()
   
@@ -31,6 +32,7 @@ const NavBar = () => {
     try {
       await signOut(auth).then(() => {
         navigate("/auth")
+        localStorage.removeItem("staff")
       })
 
     } catch (error) {
@@ -105,7 +107,7 @@ const NavBar = () => {
             </div>
           </div>
         </nav>
-        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200  transition-all duration-500 fixed overflow-hidden right-0': 'w-[calc(100%-7rem)] h-full bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
+        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200  transition-all duration-500 fixed overflow-hidden right-0': 'w-[calc(100%-112px)] h-full bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
             <nav className='w-full p-4 sticky font-bold text-3xl'>
 
                 Dashboard

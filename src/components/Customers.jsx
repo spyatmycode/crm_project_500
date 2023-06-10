@@ -12,7 +12,7 @@ import { toast } from "react-hot-toast";
 const DeleteModal= ({setModal, setDeleteUser, deleteUser, deleteFunction})=>{
   return(
     
-      <div className="fixed backdrop-blur-[1px] top-0 w-full h-full bg-brightness-50 flex justify-center items-center">
+      <div className=" backdrop-blur-[1px] fixed top-0 z-40 w-full h-full bg-brightness-50 flex justify-center items-center">
 
         <div className="modal w-[400px] h-[300px] flex justify-center items-center flex-col rounded-md shadow-lg bg-white ">
 
@@ -49,7 +49,9 @@ const Customers = () => {
   const deleteUserFromDb = async(id)=>{
       const deleteRef = doc(db,"customers",id )
 
-      deleteDoc(deleteRef).then(()=>{toast.success("Success: User has been deleted."); setModal(false)}).catch((err)=>toast.error(err.message))
+      await deleteDoc(deleteRef).then(()=>{toast.success("Success: User has been deleted."); setModal(false)}).catch((err)=>toast.error(err.message))
+
+      window.location.reload()
   }
 
   const handleQuery = (e) => {
@@ -160,6 +162,11 @@ const Customers = () => {
 
   return (
     <div className="relative  sm:rounded-lg mx-10 my-10">
+      <h2 className="text-2xl font-bold underline text-blue-500 text-center">
+
+        Table of Customers
+
+      </h2>
       <div className="flex w-full justify-center my-6">
         <input
           onChange={handleQuery}
@@ -272,7 +279,8 @@ const Customers = () => {
                     ${finalTotal}
                   </td>
                   <td className="px-6 py-4">{tag.stringValue}</td>
-                  <td className="flex items-center px-6 py-4 space-x-3">
+                  <td className="flex items-center px-6 py-4 space-x-3" >
+                    <span onClick={()=>{setCustomer(customer.id); localStorage.setItem("currentCID",JSON.stringify(customer.id))}}> 
                     <Link to={`/customer/${customer.id}`}>
                     <span
                       
@@ -282,6 +290,7 @@ const Customers = () => {
                       View
                     </span>
                     </Link>
+                    </span>
                     <button
                       
                       className="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -303,13 +312,13 @@ const Customers = () => {
 
       
 
-      <div className="stats w-full lg:grid lg:grid-cols-3 flex flex-col gap-y-10 items-center my-10">
-        <div className="relative  flex justify-center items-center flex-col  shadow-md rounded-md p-4">
+      <div className="stats w-full lg:grid lg:grid-cols-1 flex flex-col place-content-center place-items-center gap-y-10 items-center my-10">
+       
           <h1>Pie Chart for Stats</h1>
           <span>
           {database && <Pie data={tagChart} />}
           </span>
-        </div>
+       
       </div>
     </div>
    
@@ -318,32 +327,4 @@ const Customers = () => {
 
 export default Customers;
 
-// Table from ChatGpt
-{
-  /* <div className="bg-white shadow-md rounded-lg overflow-hidden">
-<table className="min-w-full">
-  <thead>
-    <tr className="bg-gray-100 text-gray-700">
-      <th className="py-2 px-4 border-b">ID</th>
-      <th className="py-2 px-4 border-b">Name</th>
-      <th className="py-2 px-4 border-b">Email</th>
-      <th className="py-2 px-4 border-b">Phone</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr className="hover:bg-gray-100">
-      <td className="py-2 px-4 border-b">1</td>
-      <td className="py-2 px-4 border-b">John Doe</td>
-      <td className="py-2 px-4 border-b">johndoe@example.com</td>
-      <td className="py-2 px-4 border-b">123-456-7890</td>
-    </tr>
-    <tr className="hover:bg-gray-100">
-      <td className="py-2 px-4 border-b">2</td>
-      <td className="py-2 px-4 border-b">Jane Smith</td>
-      <td className="py-2 px-4 border-b">janesmith@example.com</td>
-      <td className="py-2 px-4 border-b">987-654-3210</td>
-    </tr>
-  </tbody>
-</table>
-</div> */
-}
+

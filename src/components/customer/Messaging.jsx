@@ -6,6 +6,8 @@ import { updateDoc, doc, setDoc, getDoc } from "firebase/firestore";
 import { staffContext } from "../../providers/StaffProvider";
 import { toast } from "react-hot-toast";
 import { products } from "../Products";
+import loading2 from "../../assets/785 (1).gif";
+import Loading from "../Loading";
 
 const EditModal = ({
   setModalOpen,
@@ -13,21 +15,22 @@ const EditModal = ({
   email,
   firstname,
   messages,
-  staffID
+  staffID,
+  customer,
 }) => {
   const newDate = new Date().getTime();
-  
 
-  const { customer, database, setSuggestion } = useContext(CustomersDb);
+  const [loading, setLoading] = useState(false);
+
+  const { database, setSuggestion } = useContext(CustomersDb);
 
   const currentCustomer =
     database && database.find((customerr) => customerr.id === customer);
 
   const generalInfo =
     currentCustomer && currentCustomer._document.data.value.mapValue.fields;
-  const {
-    purchaseHistory,
-  } = generalInfo || {};
+
+  const { purchaseHistory } = generalInfo || {};
 
   const history = database && purchaseHistory.arrayValue.values;
 
@@ -52,32 +55,37 @@ const EditModal = ({
   console.log(catMap);
 
   let maxCount = 0;
-  let mostFrequentCategory = null
+  let mostFrequentCategory = null;
   catMap.forEach((values, keys) => {
     if (values > maxCount) {
       maxCount = values;
-      mostFrequentCategory = keys
+      mostFrequentCategory = keys;
     }
   });
 
   console.log(products, history);
 
-  const currentPurchaseHistory  = history && history.map((each)=>{
-    const {category, productID, productName, price, quantity, description}= each.mapValue.fields
+  const currentPurchaseHistory =
+    history &&
+    history.map((each) => {
+      const { category, productID, productName, price, quantity, description } =
+        each.mapValue.fields;
 
-    return {
-      id: productID.stringValue,
-      name: productName.stringValue,
-      category: category.stringValue,
-      quantity: quantity.integerValue,
-      price: price.integerValue,
-      
-    }
-  })
+      return {
+        id: productID.stringValue,
+        name: productName.stringValue,
+        category: category.stringValue,
+        quantity: quantity.integerValue,
+        price: price.integerValue,
+      };
+    });
 
-  console.log(currentPurchaseHistory,"dada");
+  console.log(currentPurchaseHistory, "dada");
 
-  const mostFreqProducts = products.filter((each)=> each.category === mostFrequentCategory).sort((a,b)=> a.price - b.price).slice(0,5)
+  const mostFreqProducts = products
+    .filter((each) => each.category === mostFrequentCategory)
+    .sort((a, b) => a.price - b.price)
+    .slice(0, 5);
 
   console.log(mostFreqProducts);
 
@@ -85,7 +93,6 @@ const EditModal = ({
     // Check if there is no object in array2 with the same id
     return !currentPurchaseHistory.some((obj2) => obj2.name === obj1.name);
   });
-
 
   let simpleMessage = `
   Subject: New Product Recommendation
@@ -105,19 +112,22 @@ Best regards,
 Darren's Store.
 
   
-  `
+  `;
 
   const [message, setMessage] = useState({
     number: phonenumber,
     staffID: staffID,
     email: email,
-    message: simpleMessage /* || `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you` */,
+    message:
+      simpleMessage /* || `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you` */,
     date: newDate,
   });
 
   console.log(difference);
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    setLoading(true);
 
     try {
       // Get the reference to the document
@@ -133,29 +143,40 @@ Darren's Store.
       // Set the updated messages array to the document
       await setDoc(docRef, { messages: updatedMessages }, { merge: true });
 
+      toast.success("Success: Message saved !");
+
       console.log("Document updated successfully!");
     } catch (error) {
       console.error("Error updating document:", error);
+      toast.error(`Error: ${error.message} `);
+      setLoading(false);
     }
 
     try {
-      const response = await fetch('https://crm-server-500.onrender.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(message)
-      });
-  
+      const response = await fetch(
+        "https://crm-server-500.onrender.com/submit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(message),
+        }
+      );
+
       const data = await response.json();
       console.log(data); // Handle the response from the server
-      toast.success("Success: Message sent successfully")
-      setModalOpen(false)
-      
+      toast.success("Success: Message sent successfully");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+      setLoading(false);
+      setModalOpen(false);
     } catch (error) {
-      setModalOpen(false)
-      console.error('Error:', error);
-      toast.error(error)
+      setModalOpen(false);
+      console.error("Error:", error);
+      toast.error(`Error: ${error.message}`);
+      setLoading(false);
     }
   };
 
@@ -253,6 +274,11 @@ Darren's Store.
           </div>
         </form>
       </div>
+      {loading && (
+        <div className="w-full h-full fixed backdrop-blur-[1px] top-0 bg-white bg-opacity-5 flex justify-center items-center flex-col ">
+          <img src={loading2} alt="" width={"50px"} className="" />
+        </div>
+      )}
     </div>
   );
 };
@@ -261,14 +287,20 @@ const Messaging = () => {
   const [message, setMessage] = useState();
   const [modalOpen, setModalOpen] = useState(false);
 
+  const customerID = window.location.href.split("/")[4];
+
+  console.log(customerID, "IDANNN");
+
   const { database, customer } = useContext(CustomersDb);
 
+  console.log("HELLOOOO", customer);
+
   const currentCustomer =
-    database && database.find((each) => each.id === customer);
+    database && database.find((each) => each.id === customerID);
 
-    const {staffDetails} = useContext(staffContext)
+  const { staffDetails } = useContext(staffContext);
 
-    console.log("HAHAQ", staffDetails);
+  console.log("HAHAQ", staffDetails);
 
   const generalInfo =
     currentCustomer && currentCustomer._document.data.value.mapValue.fields;
@@ -286,10 +318,14 @@ const Messaging = () => {
   console.log(database);
 
   console.log(messages, "DEEZ MEssages");
-  return (
-    database ? <>
+  return database ? (
+    <>
+      <h2 className="text-2xl font-bold underline text-blue-500 text-center">
+        Messaging History for {firstname.stringValue} {lastname.stringValue}{" "}
+        <span className="text-red-600">#({customerID})</span>
+      </h2>
       {database ? (
-        <div className="w-full flex flex-col justify-center  h-full p-10 lg:grid lg:grid-cols-4 gap-10">
+        <div className="w-full flex flex-col   h-full p-10 lg:grid lg:grid-cols-4 gap-10">
           <div
             className="w-[300px] h-[300px] flex justify-center items-center text-[#3B73C6] bg-white rounded-lg shadow-lg cursor-pointer"
             onClick={() => setModalOpen(true)}
@@ -299,55 +335,74 @@ const Messaging = () => {
               <h2>Send a new message</h2>
             </span>
           </div>
-          
 
-         
+          {messages ? (
+            messages.arrayValue.values?.length > 0 &&
+            messages.arrayValue.values.map((eachValue, index) => {
+              const { date, email, message, number, staffID } =
+                eachValue.mapValue.fields;
+              const timeStamp = date.integerValue * 1;
 
-{(messages  ) ? messages.arrayValue.values?.length > 0 && messages.arrayValue.values.map((eachValue, index) => {
-  const { date, email, message, number, staffID } = eachValue.mapValue.fields;
-  const timeStamp = date.integerValue * 1;
+              const day =
+                new Date(timeStamp).getDate() > 10
+                  ? new Date(timeStamp).getDate()
+                  : `0${new Date(timeStamp).getDate()}`;
+              const month =
+                new Date(timeStamp).getMonth() + 1 > 10
+                  ? 1 + new Date(timeStamp).getMonth()
+                  : `0${new Date(timeStamp).getMonth() + 1}`;
+              const year = new Date(timeStamp).getFullYear();
 
-  const day = new Date(timeStamp).getDate() > 10 ? new Date(timeStamp).getDate() : `0${new Date(timeStamp).getDate()}`;
-  const month = new Date(timeStamp).getMonth() + 1 > 10 ? 1 + new Date(timeStamp).getMonth() : `0${new Date(timeStamp).getMonth() + 1}`;
-  const year = new Date(timeStamp).getFullYear();
+              const fullDate = `${year}-${month}-${day}`;
 
-  const fullDate = `${year}-${month}-${day}`;
+              return (
+                <div
+                  key={index}
+                  className="w-[300px] h-[300px] flex justify-center items-center text-[#3B73C6] bg-white rounded-lg shadow-lg cursor-pointer flex-col font-bold"
+                >
+                  <h2 className="text-red-500">
+                    STAFFID: {staffID.stringValue}
+                  </h2>
+                  <span className="flex justify-center items-center flex-col gap-5">
+                    <textarea
+                      className="border-blue-400 outline-none border-2 p-2"
+                      name=""
+                      id=""
+                      cols="25"
+                      rows="7"
+                      defaultValue={message.stringValue}
+                    ></textarea>
 
-  return (
-    <div
-      key={index}
-      className="w-[300px] h-[300px] flex justify-center items-center text-[#3B73C6] bg-white rounded-lg shadow-lg cursor-pointer flex-col font-bold"
-    >
-      <h2 className="text-red-500">STAFFID: {staffID.stringValue}</h2>
-      <span className="flex justify-center items-center flex-col gap-5">
-        <textarea className="border-blue-400 outline-none border-2 p-2" name="" id="" cols="25" rows="7" defaultValue={message.stringValue}></textarea>
-
-        <div className="text-black flex w-full justify-evenly items-center">
-          <span>{fullDate}</span>
-          <span>...</span>
-        </div>
-      </span>
-    </div>
-  );
-}): <div className="">No available messages at this time</div>}
-
+                    <div className="text-black flex w-full justify-evenly items-center">
+                      <span>{fullDate}</span>
+                      <span>...</span>
+                    </div>
+                  </span>
+                </div>
+              );
+            })
+          ) : (
+            <div className="">No available messages at this time</div>
+          )}
         </div>
       ) : (
-        <div>Loading...</div>
+        <Loading />
       )}
 
       {modalOpen && (
         <EditModal
           setModalOpen={setModalOpen}
-          phonenumber={phonenumber.stringValue}
-          email={email.stringValue}
-          firstname={firstname.stringValue}
-          customer={customer}
+          phonenumber={phonenumber.stringValue || ""}
+          email={email.stringValue || ""}
+          firstname={firstname.stringValue || ""}
+          customer={customerID}
           messages={messages}
           staffID={staffDetails.staffID}
         />
       )}
-    </>: <div>loading</div>
+    </>
+  ) : (
+    <Loading />
   );
 };
 

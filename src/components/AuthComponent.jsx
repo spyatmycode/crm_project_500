@@ -45,6 +45,7 @@ const Signin = ({ setCurrent }) => {
         console.log(userCredential.user);
 
         setStaff(userCredential.user);
+        localStorage.setItem('staff', JSON.stringify(userCredential.user))
 
         toast.success(`Login successful ! Welcome ${staffDetails.firstname}`);
         console.log(userCredential.user);
@@ -166,9 +167,13 @@ const Register = ({ setCurrent }) => {
 
         setLoading(false);
 
+
         navigate("/customers");
 
+        localStorage.setItem('staff',JSON.stringify(userCredential.user))
+
         toast.success("Registration success");
+
 
         console.log(user);
         // ...

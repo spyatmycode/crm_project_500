@@ -7,7 +7,6 @@ import CustomerProvider from "./providers/CustomerProvider";
 import Test from "./components/Test";
 import Customers from "./components/Customers";
 import Customer from "./components/customer/Customer";
-import Profile from "./components/customer/Profile";
 import History from "./components/customer/History";
 import { doc, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from './firebase/firebaseconfig';
@@ -139,12 +138,12 @@ const App = () => {
     const user = {
       firstname:nigerianNames[randomNameIndex],
       lastname:nigerianSurnames[randomSurnameIndex],
-      email:fakeNigerianEmails[randomEmailIndex],
+      email:`${nigerianNames[randomNameIndex]}${nigerianSurnames[randomSurnameIndex]}@gmail.com`,
       lastvisit:"2023-02-23",
       phonenumber:fakeNigerianPhoneNumbers[randomNumberIndex],
       purchaseHistory:[
         {
-          date: '2024-01-01',
+          date: '2023-01-01',
           productID: 'Product 1',
           productName: 'iPhone 13 Pro',
           description: 'The latest flagship smartphone from Apple.',
@@ -153,7 +152,7 @@ const App = () => {
           quantity: 10,
         },
         {
-          date: '2024-01-05',
+          date: '2023-01-05',
           productID: 'Product 2',
           productName: 'Samsung Galaxy S22',
           description: 'A powerful Android smartphone with advanced features.',
@@ -162,7 +161,7 @@ const App = () => {
           quantity: 15,
         },
         {
-          date: '2024-01-10',
+          date: '2023-01-10',
           productID: 'Product 3',
           productName: 'MacBook Pro',
           description: 'A high-performance laptop for professional use.',
@@ -171,7 +170,7 @@ const App = () => {
           quantity: 5,
         },
         {
-          date: '2024-01-15',
+          date: '2023-01-15',
           productID: 'Product 4',
           productName: 'Amazon Echo Dot',
           description: 'A smart speaker with voice assistant capabilities.',
@@ -180,7 +179,7 @@ const App = () => {
           quantity: 20,
         },
         {
-          date: '2024-01-20',
+          date: '2023-01-20',
           productID: 'Product 5',
           productName: 'Sony PlayStation 5',
           description: 'The latest gaming console from Sony.',
@@ -189,7 +188,7 @@ const App = () => {
           quantity: 8,
         },
         {
-          date: '2024-02-02',
+          date: '2022-02-02',
           productID: 'Product 6',
           productName: 'Nike Air Jordan 1',
           description: 'Iconic basketball sneakers with a classic design.',
@@ -198,7 +197,7 @@ const App = () => {
           quantity: 12,
         },
         {
-          date: '2024-02-08',
+          date: '2022-02-08',
           productID: 'Product 7',
           productName: 'Canon EOS R5',
           description: 'A professional-grade mirrorless camera for photographers.',
@@ -207,7 +206,7 @@ const App = () => {
           quantity: 3,
         },
         {
-          date: '2024-02-12',
+          date: '2021-02-12',
           productID: 'Product 8',
           productName: 'Fitbit Versa 4',
           description: 'A stylish smartwatch with health and fitness tracking features.',
@@ -216,7 +215,7 @@ const App = () => {
           quantity: 7,
         },
         {
-          date: '2024-02-18',
+          date: '2023-02-18',
           productID: 'Product 9',
           productName: 'LEGO Star Wars Millennium Falcon',
           description: 'A detailed LEGO set of the iconic Star Wars spaceship.',
@@ -225,7 +224,7 @@ const App = () => {
           quantity: 2,
         },
         {
-          date: '2024-02-22',
+          date: '2022-02-22',
           productID: 'Product 10',
           productName: 'Apple AirPods Pro',
           description: 'Wireless earbuds with active noise cancellation.',
@@ -234,7 +233,7 @@ const App = () => {
           quantity: 10,
         },
         {
-          date: '2024-03-07',
+          date: '2022-03-07',
           productID: 'Product 11',
           productName: 'Samsung QLED 4K TV',
           description: 'A high-quality 4K smart TV with QLED display technology.',
@@ -243,7 +242,7 @@ const App = () => {
           quantity: 4,
         },
         {
-          date: '2024-03-12',
+          date: '2023-03-12',
           productID: 'Product 12',
           productName: 'Adidas Ultra Boost',
           description: 'Comfortable running shoes with responsive cushioning.',
@@ -252,7 +251,7 @@ const App = () => {
           quantity: 9,
         },
         {
-          date: '2024-03-18',
+          date: '2023-03-18',
           productID: 'Product 13',
           productName: 'Dyson V11 Absolute',
           description: 'A powerful cordless vacuum cleaner with advanced features.',
@@ -261,7 +260,7 @@ const App = () => {
           quantity: 6,
         },
         {
-          date: '2024-03-22',
+          date: '2023-03-22',
           productID: 'Product 14',
           productName: 'Nintendo Switch',
           description: 'A versatile gaming console for home and portable gaming.',
@@ -270,7 +269,7 @@ const App = () => {
           quantity: 15,
         },
         {
-          date: '2024-04-05',
+          date: '2023-04-29',
           productID: 'Product 15',
           productName: 'Sony WH-1000XM4',
           description: 'Wireless headphones with industry-leading noise cancellation.',
@@ -279,7 +278,7 @@ const App = () => {
           quantity: 8,
         },
         {
-          date: '2024-04-10',
+          date: '2023-05-10',
           productID: 'Product 16',
           productName: 'Instant Pot Duo',
           description: 'A multi-purpose electric pressure cooker for convenient cooking.',
@@ -288,7 +287,7 @@ const App = () => {
           quantity: 11,
         },
         {
-          date: '2024-04-15',
+          date: '2023-05-15',
           productID: 'Product 17',
           productName: 'GoPro Hero 10 Black',
           description: 'A high-performance action camera for capturing adventures.',
@@ -297,7 +296,7 @@ const App = () => {
           quantity: 5,
         },
         {
-          date: '2024-04-20',
+          date: '2023-05-20',
           productID: 'Product 18',
           productName: 'Fujifilm X-T4',
           description: 'A mirrorless camera with advanced features for photography enthusiasts.',
@@ -306,7 +305,7 @@ const App = () => {
           quantity: 3,
         },
         {
-          date: '2024-05-02',
+          date: '2023-05-02',
           productID: 'Product 19',
           productName: 'Bose QuietComfort 35 II',
           description: 'Wireless headphones with excellent sound quality and noise cancellation.',
@@ -315,7 +314,7 @@ const App = () => {
           quantity: 9,
         },
         {
-          date: '2024-05-08',
+          date: '2023-05-08',
           productID: 'Product 20',
           productName: 'Microsoft Surface Laptop 4',
           description: 'A sleek and powerful laptop for productivity and creativity.',
@@ -432,9 +431,9 @@ const App = () => {
     console.log("tat a",randomNumberIndex);
     
 
-  useEffect(() => {
+  /* useEffect(() => {
     nawa();
-  }, []);
+  }, []); */
 
   return (
     <>
