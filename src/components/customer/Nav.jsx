@@ -108,7 +108,7 @@ const NavBar = () => {
             </div>
           </div>
         </nav>
-        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200 flex justify-center items-center  transition-all duration-500 fixed overflow-hidden right-0': 'bg-[#f4f4f4] w-[calc(100%-7rem)] h-full dark:bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
+        <div className={navExpand === true? ' h-full w-5/6 bg-gray-200 flex flex-col  items-center  transition-all duration-500 fixed overflow-hidden right-0': 'bg-[#f4f4f4] w-[calc(100%-7rem)] h-full dark:bg-gray-200  overflow-x-hidden fixed right-0 transition-all duration-500 '}>
             <nav className='w-full p-10  font-bold text-3xl'>
 
                 Dashboard

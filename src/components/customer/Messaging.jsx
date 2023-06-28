@@ -94,6 +94,32 @@ const EditModal = ({
     return !currentPurchaseHistory.some((obj2) => obj2.name === obj1.name);
   });
 
+  let newEmail = "darrenstores3(&)gmail.com"
+
+  let newMessage=`Dear ${firstname},
+
+  We hope this message finds you well. It has been a while since your last visit to our store, and we wanted to recommend a special product to you. We believe it's a perfect match for your interests and preferences.
+  
+  Product Recommendation:
+  Product Name: ${difference[0].name}
+  Description:  ${difference[0].category}
+  Category: ${difference[0].description}
+  Price:${difference[0].price}
+  
+  We believe this product will enhance your experience. If you have any questions or would like to make a purchase, contact us at ${"2348130579179"} or email us at ${newEmail}. We're here to help!
+
+Looking forward to seeing you again soon.
+
+Best regards,
+Darren's Store
+
+
+
+
+
+
+`
+
   let simpleMessage = `
   Subject: New Product Recommendation
 
@@ -118,8 +144,8 @@ Darren's Store.
     number: phonenumber,
     staffID: staffID,
     email: email,
-    message:
-      simpleMessage /* || `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you` */,
+    message:newMessage
+       /* || `Hey there ${firstname}. We haven't see you in a while. How about you come check out some great deals that we have in store for you` */,
     date: newDate,
   });
 
@@ -151,6 +177,8 @@ Darren's Store.
       toast.error(`Error: ${error.message} `);
       setLoading(false);
     }
+
+    // "https://crm-server-500.onrender.com/submit
 
     try {
       const response = await fetch(
@@ -254,7 +282,7 @@ Darren's Store.
                 cols="30"
                 rows="10"
                 className="outline-none border-2 p-2 border-blue-400 w-full"
-                defaultValue={`${simpleMessage}`}
+                defaultValue={`${newMessage}`}
               ></textarea>
             </span>
 

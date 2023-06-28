@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 
 
 
-
+//This is the code for the Navigation bar at the Home page
 
 
 
