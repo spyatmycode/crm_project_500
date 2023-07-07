@@ -59,7 +59,7 @@ const Table = ({array}) => {
                   {quantity}
                 </td>
                 <td class="px-6 py-4">
-                   ${price}
+                ₦{price}
                 </td>
                 <td class="px-6 py-4">
                    {category}
