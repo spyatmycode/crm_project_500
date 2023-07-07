@@ -41,6 +41,8 @@ const DeleteModal= ({setModal, setDeleteUser, deleteUser, deleteFunction})=>{
 
 const Customers = () => {
   const { database , setCustomer} = useContext(CustomersDb);
+  
+  console.log(database);
   const [query, setQuery] = useState("");
 
   const [modal, setModal] = useState(false)
@@ -158,6 +160,8 @@ const Customers = () => {
     ],
   };
 
+  console.log(filteredList());
+
   console.log("This is the delete user",deleteUser);
 
   return (
@@ -237,6 +241,16 @@ const Customers = () => {
                 tag,
               } = customer._document.data.value.mapValue.fields;
 
+              console.log({
+                firstname,
+                lastname,
+                phonenumber,
+                lastvisit,
+                email,
+                purchaseHistory,
+                tag,
+              });
+
               const totalAmount = purchaseHistory.arrayValue.values
 
      
@@ -276,7 +290,7 @@ const Customers = () => {
                   <td className="px-6 py-4">{phonenumber.stringValue}</td>
                   <td className="px-6 py-4">{lastvisit.stringValue}</td>
                   <td className="px-6 py-4">
-                    ${finalTotal}
+                  &#8358;{finalTotal}
                   </td>
                   <td className="px-6 py-4">{tag.stringValue}</td>
                   <td className="flex items-center px-6 py-4 space-x-3" >

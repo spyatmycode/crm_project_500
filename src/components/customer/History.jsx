@@ -51,7 +51,7 @@ const History = () => {
     plugins: {
       title: {
         display: true,
-        text: "Chart.js Bar Chart - Stacked",
+        text: "",
       },
     },
     responsive: true,
