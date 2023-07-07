@@ -447,6 +447,7 @@ const App = () => {
           <Routes>
             <Route element={<Protected><Nav /></Protected>}>
               <Route path="/customers" index element={<Protected><Customers /></Protected>} />
+              <Route path="/" index element={<Protected><Customers /></Protected>} />
               <Route path="/products"  element={<Protected><Products /></Protected>} />
             </Route>
 

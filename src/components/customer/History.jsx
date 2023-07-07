@@ -471,10 +471,10 @@ const History = () => {
                       <td className="px-6 py-4">{productName.stringValue}</td>
                       <td className="px-6 py-4">{category.stringValue}</td>
 
-                      <td className="px-6 py-4">${price.integerValue}</td>
+                      <td className="px-6 py-4">₦{price.integerValue}</td>
                       <td className="px-6 py-4">{quantity.integerValue}</td>
                       <td className="px-6 py-4">
-                        ${price.integerValue * quantity.integerValue}
+                      ₦{price.integerValue * quantity.integerValue}
                       </td>
                       <td className="px-6 py-4">{date.stringValue}</td>
 
@@ -503,7 +503,7 @@ const History = () => {
 
         <div className="mt-10">
           <span className="text-2xl">Total Amount Spent:</span>{" "}
-          <span className="text-2xl font-bold">{`$${pricesTotal}`}</span>
+          <span className="text-2xl font-bold">{`₦${pricesTotal}`}</span>
         </div>
         <div className="mt-10">
           <span className="text-2xl">Last Visited:</span>

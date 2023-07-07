@@ -106,7 +106,7 @@ const EditModal = ({
   Category: ${difference[0].description}
   Price:${difference[0].price}
   
-  We believe this product will enhance your experience. If you have any questions or would like to make a purchase, contact us at ${"2348130579179"} or email us at ${newEmail}. We're here to help!
+  We believe this product will enhance your experience. If you have any questions or would like to make a purchase, contact us at ${"08130579179"} or email us at ${newEmail}. We're here to help!
 
 Looking forward to seeing you again soon.
 
