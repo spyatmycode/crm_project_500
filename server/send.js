@@ -2,8 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import request from 'request';
-
+import dotenv from "dotenv"
+dotenv.config()
 const app = express();
+
+console.log(process.env.SENDCHAM_AUTH);
 
 // Enable CORS
 app.use(cors());
@@ -15,21 +18,6 @@ app.use(express.json());
 app.post('/submit',  async (req, res) => {
   const { number, email, message,  } = req.body;
 
-  // const options = {
-  //   method: 'POST',
-  //   url: 'https://api.sendchamp.com/api/v1/sms/send', 
-  //   headers: {
-  //     Accept: 'application/json,text/plain,*/*',
-  //     'Content-Type': 'application/json',
-  //     Authorization: 'Bearer sendchamp_live_$2a$10$7zRcO.k7nq40jOTuQhhGl.drDV66cmkuOwEqvdB4iax4zsLkN76va'
-  //   },
-  //   form: {
-  //     to: '2347051807727',
-  //     message: 'No lie that last message make sense',
-  //     sender_name: 'Sendchamp',
-  //     route: 'dnd'
-  //   }
-  // };
 
   const requestBody = {
     to: number,
@@ -42,7 +30,7 @@ app.post('/submit',  async (req, res) => {
   
   const config = {
     headers:{
-      Authorization: "Bearer sendchamp_live_$2a$10$7zRcO.k7nq40jOTuQhhGl.drDV66cmkuOwEqvdB4iax4zsLkN76va"
+      Authorization: process.env.SENDCHAM_AUTH
     }
   }
 
@@ -59,23 +47,8 @@ app.post('/submit',  async (req, res) => {
 });
 
 // Start the server
-const port = 3000;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-/* try {
-    const response = await axios(options);
-    console.log('SMS sent successfully:', response.data);
-    res.json({ success: true, message: 'SMS sent successfully' });
-  } catch (error) {
-    console.error('There was an error sending the SMS:', error);
-    res.status(500).json({ success: false, message: 'Failed to send SMS' });
-  } */
-  
-  /* request(options, function (error, response, body) {
-    if (error) throw new Error(error);
-  
-    console.log(body);
-  });
- */

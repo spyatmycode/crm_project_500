@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import loading2 from "../../assets/785 (1).gif";
 import man from "../../assets/man.jpeg";
 import { CustomersDb } from "../../providers/CustomerProvider";
 import { db } from "../../firebase/firebaseconfig";
